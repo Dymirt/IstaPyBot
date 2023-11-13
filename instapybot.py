@@ -12,6 +12,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 import lxml
 import pickle
+import re
 
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
@@ -82,14 +83,17 @@ class Instagram(webdriver.Firefox):
                     pass
 
         time.sleep(SLEEP_TIME)
+        profile_links = set()
         page_links = self.find_elements(by=By.TAG_NAME, value='a')
-
         for link in page_links:
-            print(link.get_attribute('href'))
+            raw_search_string = r"\b" + 'https://www.instagram.com/' + r"(\w+)/"
+            if re.fullmatch(raw_search_string, link.get_attribute('href')):
+                profile_links.add(link.get_attribute('href'))
+        print(profile_links)
 
 
 
-        links = self.find_elements(By.CLASS_NAME, value='notranslate')
+        """       links = self.find_elements(By.CLASS_NAME, value='notranslate')
 
         link_list = list(set([x.get_attribute('title') for x in links]))
 
@@ -105,12 +109,12 @@ class Instagram(webdriver.Firefox):
                     # button.click() works just fine but for some reason exception appear
                     pass
         #for x in range(2):
-        #    dialog.send_keys(Keys.PAGE_DOWN)
-            """            links = self.find_elements(By.CLASS_NAME, value='notranslate')
+        #    dialog.send_keys(Keys.PAGE_DOWN)"""
+        """            links = self.find_elements(By.CLASS_NAME, value='notranslate')
             for link in links:
                 if link.get_attribute('title') not in link_list:
                     link_list"""
-        return link_list
+        #return link_list
 
 
 browser = Instagram(BASE_URL, USERNAME, PASSWORD)
@@ -124,6 +128,8 @@ try:
 except FileNotFoundError:
     browser.login()
     pickle.dump(browser.get_cookies(), open(COOKIES_FILE, "wb"))
+
+browser.liked_by('https://www.instagram.com/p/CjwF6sqqE1x/')
 
 # Save cookies at the end
 pickle.dump(browser.get_cookies(), open(COOKIES_FILE, "wb"))

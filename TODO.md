@@ -23,3 +23,8 @@
 If Instagram use some limits on activity, there i posibility to that they use dinamicly generated limits for account, based on history activity.
 so, limits must be growing from lov activity to high
 
+#TODO
+- [ ] Adding security hashing to coocies.pkl
+- [ ] Scraping all people who like post
+- 
+
